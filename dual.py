@@ -168,19 +168,35 @@ elif st.session_state.step == "training_running":
                             f"</div>", unsafe_allow_html=True)
                 time.sleep(1.3)
 
-    # --- 難易度C：ナンバー・クラップ ---
+    # --- 【改良版】難易度C：ナンバー・クラップ ---
     elif st.session_state.difficulty == "C":
+        import random
+        
+        # ランダムに使用する背景色のリスト
+        # 高齢者の方が見やすいよう、文字（白または黒）とのコントラストが良い色を選んでいます
+        colors = [
+            {"bg": "#ff4b4b", "text": "white"},   # 赤
+            {"bg": "#f0f2f6", "text": "#31333F"}, # 白（薄いグレー）
+            {"bg": "#2b82d6", "text": "white"},   # 青
+            {"bg": "#2bd677", "text": "white"}    # 緑
+        ]
+        
         for i in range(1, 16):
+            # 3の倍数かどうかに関係なく、色をリストからランダムに1つ決定
+            current_color = random.choice(colors)
+            
             with placeholder.container():
                 if i % 3 == 0:
-                    st.markdown(f"<div style='text-align: center; background-color: #ff4b4b; padding: 100px 20px; border-radius: 15px; width: 100%;'>"
-                                f"<div style='font-size: 160px; color: white; line-height: 1.2;'>👏 {i} 👏</div>"
-                                f"<h1 style='color: white; font-size: 60px; margin: 30px 0 0 0;'>手を叩く！</h1>"
+                    # 3の倍数のとき（画面の色はランダムだが、文字の指示は「手を叩く」）
+                    st.markdown(f"<div style='text-align: center; background-color: {current_color['bg']}; padding: 100px 20px; border-radius: 15px; width: 100%;'>"
+                                f"<div style='font-size: 160px; color: {current_color['text']}; line-height: 1.2;'>👏 {i} 👏</div>"
+                                f"<h1 style='color: {current_color['text']}; font-size: 60px; margin: 30px 0 0 0;'>手を叩く！</h1>"
                                 f"</div>", unsafe_allow_html=True)
                 else:
-                    st.markdown(f"<div style='text-align: center; background-color: #f0f2f6; padding: 100px 20px; border-radius: 15px; width: 100%;'>"
-                                f"<div style='font-size: 160px; color: #31333F; line-height: 1.2;'>{i}</div>"
-                                f"<h1 style='color: #31333F; font-size: 60px; margin: 30px 0 0 0;'>足踏みキープ</h1>"
+                    # 3の倍数ではないとき
+                    st.markdown(f"<div style='text-align: center; background-color: {current_color['bg']}; padding: 100px 20px; border-radius: 15px; width: 100%;'>"
+                                f"<div style='font-size: 160px; color: {current_color['text']}; line-height: 1.2;'>{i}</div>"
+                                f"<h1 style='color: {current_color['text']}; font-size: 60px; margin: 30px 0 0 0;'>足踏みキープ</h1>"
                                 f"</div>", unsafe_allow_html=True)
                 time.sleep(1.0)
 
