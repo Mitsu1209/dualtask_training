@@ -95,7 +95,7 @@ elif st.session_state.step == "training_ready":
     elif st.session_state.difficulty == "D":
         st.subheader("メニュー：ストップ＆ゴー")
         st.markdown("""
-        1. 椅子の横に**まっすぐ立って**姿勢をキープしてください（不安なら手を添えて）。
+        1. 椅子の横に**まっすぐ立って**姿勢をキキープしてください（不安なら手を添えて）。
         2. 画面のマークが **「キープ（緑）」** の間は動かずじっとします。
         3. マークが **「👏手を叩く（赤）」** に変わったら、その場で1回拍手してください！
         """)
@@ -104,7 +104,8 @@ elif st.session_state.step == "training_ready":
         st.markdown("""
         1. 椅子の後ろに立ち、いつでも掴まれるようにして**足踏み**を始めてください。
         2. 画面に**1から15までの数字が順番に**表示されます。
-        3. 数字が **3の倍数（3, 6, 9, 12, 15）** になった瞬間だけ、足踏みを続けながら**手を1回叩いて**ください！
+        3. 数字が **3の倍数（3, 6, 9, 12, 15）** かどうかを頭で計算し、3の倍数の瞬間だけ**手を1回叩いて**ください！
+        4. 画面の案内は変化しません。自分の頭の計算だけが頼りです！
         """)
     elif st.session_state.difficulty == "B":
         st.subheader("メニュー：ナンバー・クラップ【難しい】")
@@ -112,7 +113,7 @@ elif st.session_state.step == "training_ready":
         1. 椅子の後ろに立ち、いつでも掴まれるようにして**足踏み**を始めてください。
         2. 画面に **1から20までの数字が「ランダム（バラバラ）」に** 表示されます！
         3. 画面にパッと出た数字が **3の倍数（3, 6, 9, 12, 15, 18）** だったら、素早く**手を1回叩いて**ください！
-        4. 背景色もバラバラに変わるので、色に騙されず数字をよく計算しましょう！
+        4. 文字のヒントや背景色はバラバラに変わるので、惑わされずに数字をよく計算しましょう！
         """)
     elif st.session_state.difficulty == "A":
         st.subheader("メニュー：リバース＆ストレート・ワード")
@@ -178,47 +179,33 @@ elif st.session_state.step == "training_running":
                             f"</div>", unsafe_allow_html=True)
                 time.sleep(1.3)
 
-    # --- 難易度C：ナンバー・クラップ（順番通りに15まで・背景色ランダム） ---
+    # --- 難易度C：ナンバー・クラップ（順番通り・文字ヒント排除仕様） ---
     elif st.session_state.difficulty == "C":
         for i in range(1, 16):
             current_color = random.choice(colors)
             with placeholder.container():
-                if i % 3 == 0:
-                    st.markdown(f"<div style='text-align: center; background-color: {current_color['bg']}; padding: 100px 20px; border-radius: 15px; width: 100%;'>"
-                                f"<div style='font-size: 160px; color: {current_color['text']}; line-height: 1.2;'>👏 {i} 👏</div>"
-                                f"<h1 style='color: {current_color['text']}; font-size: 60px; margin: 30px 0 0 0;'>手を叩く！</h1>"
-                                f"</div>", unsafe_allow_html=True)
-                else:
-                    st.markdown(f"<div style='text-align: center; background-color: {current_color['bg']}; padding: 100px 20px; border-radius: 15px; width: 100%;'>"
-                                f"<div style='font-size: 160px; color: {current_color['text']}; line-height: 1.2;'>{i}</div>"
-                                f"<h1 style='color: {current_color['text']}; font-size: 60px; margin: 30px 0 0 0;'>足踏みキープ</h1>"
-                                f"</div>", unsafe_allow_html=True)
+                # 3の倍数かどうかにかかわらず、下部の文字指示は常に固定して脳に計算させます
+                st.markdown(f"<div style='text-align: center; background-color: {current_color['bg']}; padding: 100px 20px; border-radius: 15px; width: 100%;'>"
+                            f"<div style='font-size: 160px; color: {current_color['text']}; line-height: 1.2;'>{i}</div>"
+                            f"<h1 style='color: {current_color['text']}; font-size: 60px; margin: 30px 0 0 0;'>⚠️ 3の倍数なら手を叩く！</h1>"
+                            f"</div>", unsafe_allow_html=True)
                 time.sleep(1.0)
 
-    # --- 【新登場】難易度B：ナンバー・クラップ【難しい】（1-20のランダム数字・背景色ランダム） ---
+    # --- 難易度B：ナンバー・クラップ【難しい】（ランダム数字・文字ヒント排除仕様） ---
     elif st.session_state.difficulty == "B":
-        # 1から20までの数字をランダムに並び替えたリストを作成（重複なしで15問出題）
         random_numbers = random.sample(range(1, 21), 15)
         
         for num in random_numbers:
             current_color = random.choice(colors)
             with placeholder.container():
-                if num % 3 == 0:
-                    # 3の倍数のとき（3, 6, 9, 12, 15, 18）
-                    st.markdown(f"<div style='text-align: center; background-color: {current_color['bg']}; padding: 100px 20px; border-radius: 15px; width: 100%;'>"
-                                f"<div style='font-size: 160px; color: {current_color['text']}; line-height: 1.2;'>👏 {num} 👏</div>"
-                                f"<h1 style='color: {current_color['text']}; font-size: 60px; margin: 30px 0 0 0;'>手を叩く！</h1>"
-                                f"</div>", unsafe_allow_html=True)
-                else:
-                    # 3の倍数ではないとき
-                    st.markdown(f"<div style='text-align: center; background-color: {current_color['bg']}; padding: 100px 20px; border-radius: 15px; width: 100%;'>"
-                                f"<div style='font-size: 160px; color: {current_color['text']}; line-height: 1.2;'>{num}</div>"
-                                f"<h1 style='color: {current_color['text']}; font-size: 60px; margin: 30px 0 0 0;'>足踏みキープ</h1>"
-                                f"</div>", unsafe_allow_html=True)
-                # ランダム数字なので、計算の思考時間を少し考慮して1.2秒に設定
+                # 文字での「手を叩く！」「足踏みキープ」というヒントを完全に無くし、常に同じ警告を表示します
+                st.markdown(f"<div style='text-align: center; background-color: {current_color['bg']}; padding: 100px 20px; border-radius: 15px; width: 100%;'>"
+                            f"<div style='font-size: 160px; color: {current_color['text']}; line-height: 1.2;'>{num}</div>"
+                            f"<h1 style='color: {current_color['text']}; font-size: 60px; margin: 30px 0 0 0;'>⚠️ 3の倍数なら手を叩く！</h1>"
+                            f"</div>", unsafe_allow_html=True)
                 time.sleep(1.2)
 
-    # --- 難易度A（旧B）：リバース＆ストレート・ワード ---
+    # --- 難易度A：リバース＆ストレート・ワード ---
     elif st.session_state.difficulty == "A":
         words = ["さくら", "たぬき", "めだか", "すいか", "おてだま", "きつね", "ひこうき"]
         mode_options = ["ストレート", "リバース"]
