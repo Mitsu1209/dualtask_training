@@ -2,7 +2,7 @@ import streamlit as st
 import time
 
 # ページの設定
-st.set_page_config(page_title="転倒予防デュアルタスク", page_icon="🏃‍♂️", layout="centered")
+st.set_page_config(page_title="転倒予防「ながら」エクササイズ", page_icon="🏃‍♂️", layout="centered")
 
 # --- セッション状態（アプリの記憶）の初期化 ---
 if "step" not in st.session_state:
@@ -13,8 +13,8 @@ if "evaluation" not in st.session_state:
     st.session_state.evaluation = ""
 
 # --- タイトル表示 ---
-st.title("🏃‍♂️ 転倒予防！二重課題ゲーム【完全版】")
-st.write("要支援高齢者向けのバランス＆脳トレアプリ（全5ステージ）")
+st.title("🏃‍♂️ 転倒予防！「ながら」エクササイズ【トライアル版】")
+st.write("要支援高齢者向けのバランス＆脳トレアプリ（全6ステージ）")
 st.markdown("---")
 
 # ==========================================
@@ -24,7 +24,7 @@ if st.session_state.step == "menu":
     st.markdown("### 🌟 挑戦する難易度を選んでください")
     st.write("ご自身の体調に合わせて、無理のないレベルから始めましょう。")
     
-    if st.button("🟢 難易度 E（易しい：座って足踏み ＋ 首の運動）", use_container_width=True):
+    if st.button("🟢 難易度 E（易しい：座って足踏み ＋ ランダムじゃんけん）", use_container_width=True):
         st.session_state.difficulty = "E"
         st.session_state.step = "safety_check"
         st.rerun()
@@ -39,13 +39,18 @@ if st.session_state.step == "menu":
         st.session_state.step = "safety_check"
         st.rerun()
 
-    if st.button("🔴 難易度 B（やや難：片脚立ち（支持あり） ＋ 言葉の逆唱 or 順唱）", use_container_width=True):
+    if st.button("🔴 難易度 B（やや難：片脚立ち（支持あり） ＋ 言葉の逆唱）", use_container_width=True):
         st.session_state.difficulty = "B"
         st.session_state.step = "safety_check"
         st.rerun()
 
     if st.button("🟣 難易度 A（難しい：足踏み ＋ 手元で物品操作）", use_container_width=True):
         st.session_state.difficulty = "A"
+        st.session_state.step = "safety_check"
+        st.rerun()
+
+    if st.button("⚫ 難易度 S（超難しい：片脚立ち（支持あり） ＋ 後出し負けじゃんけん）", use_container_width=True):
+        st.session_state.difficulty = "S"
         st.session_state.step = "safety_check"
         st.rerun()
 
@@ -57,7 +62,7 @@ elif st.session_state.step == "safety_check":
     
     if st.session_state.difficulty == "E":
         st.write("今回は【座った姿勢】で行います。背もたれのある安定した椅子に深く腰掛け、周りにぶつかる物がないか確認してください。")
-    elif st.session_state.difficulty == "B":
+    elif st.session_state.difficulty in ["B", "S"]:
         st.write("今回は【片脚立ち（支持あり）】を行います。必ず【椅子の背もたれや頑丈な手すり】の横に立ち、いつでも掴まれる準備をしてください。")
     else:
         st.write("今回は【立った姿勢】で行います。周りに掴まれる『椅子』や『手すり』はありますか？足元に物が散らばっていませんか？")
@@ -81,11 +86,11 @@ elif st.session_state.step == "training_ready":
     st.info("💡 ルール説明")
     
     if st.session_state.difficulty == "E":
-        st.subheader("メニュー：キョロキョロ・サーチ")
+        st.subheader("メニュー：座位足踏みじゃんけん")
         st.markdown("""
         1. 椅子に深く座り、自分のペースでトントンと**足踏み**を始めてください。
-        2. 画面に **「上・下・右・左」** の指示が出ます。
-        3. 足踏みは止めずに、指示された方向を**目と首でしっかり見て**ください！
+        2. 画面に **「✊・✌️・✋」** がランダムに表示されます。
+        3. 画面の手に対して、声を出して**「勝つ手」**をポンポン出してください！
         """)
     elif st.session_state.difficulty == "D":
         st.subheader("メニュー：ストップ＆ゴー")
@@ -101,18 +106,26 @@ elif st.session_state.step == "training_ready":
         2. 画面の数字が **3の倍数（3, 6, 9...）** になった瞬間だけ、足踏みを続けながら**手を1回叩いて**ください！
         """)
     elif st.session_state.difficulty == "B":
-        st.subheader("メニュー：リバース・ワード")
+        st.subheader("メニュー：リバース＆ストレート・ワード")
         st.markdown("""
         1. **片手で椅子をしっかり掴み**、どちらかの足を上げて**片脚立ち**になります。
-        2. 画面に3文字の言葉（例：「さくら」）が表示されます。
-        3. 姿勢を保ったまま、その言葉を**後ろから逆（例：「らくさ」）に声に出して**読んでください！
+        2. 画面の指示（そのまま読む、または逆から読む）に合わせて、表示された単語を声に出します。
+        3. ルールが途中で変わるので、騙されないように声を出し、バランスをキープしてください！
         """)
     elif st.session_state.difficulty == "A":
         st.subheader("メニュー：お手玉・トランスファー")
         st.markdown("""
         1. **お手玉、または丸めた靴下など**（落としても安全なもの）を1つ手元に用意します。
         2. その場でリズムよく**足踏み**を始めます。
-        3. 画面の指示（1秒ごと）に合わせて、お手玉を**「右手 ➡️ 左手 ➡️ 右手」と交互に胸の前で持ち替えて**ください！
+        3. 画面にランダムで表示される指示（みぎ手・ひだり手）に合わせて、お手玉をその手に移動させてください！連続で同じ手になることもあります。
+        """)
+    elif st.session_state.difficulty == "S":
+        st.subheader("メニュー：片脚立ち・後出し負けじゃんけん")
+        st.markdown("""
+        1. **片手で椅子をしっかり掴み**、どちらかの足を上げて**片脚立ち**になります。
+        2. 画面に **「✊・✌️・✋」** がランダムに表示されます。
+        3. 画面の手に対して、声を出して**「わざと負ける手」**を素早く出してください！
+        4. 脳が大混乱しますが、足元のバランスが崩れないように集中しましょう！
         """)
         
     if st.button("スタート！", type="primary", use_container_width=True):
@@ -125,18 +138,23 @@ elif st.session_state.step == "training_ready":
 elif st.session_state.step == "training_running":
     placeholder = st.empty()
     
-    # --- 難易度E：キョロキョロ・サーチ ---
+    # --- 難易度E：座位足踏み・ランダムじゃんけん ---
     if st.session_state.difficulty == "E":
-        directions = ["正面", "右を見て！", "正面", "左を見て！", "正面", "上を見て！", "正面", "下を見て！", "正面", "右を見て！", "正面", "左を見て！", "終了！"]
-        for dir_text in directions:
+        import random
+        janken_options = [
+            {"name": "グー", "emoji": "✊"},
+            {"name": "チョキ", "emoji": "✌️"},
+            {"name": "パー", "emoji": "✋"}
+        ]
+        for i in range(10):
+            current_hand = random.choice(janken_options)
             with placeholder.container():
-                bg_color = "#f0f2f6" if dir_text == "正面" else "#4b9bff"
-                text_color = "#31333F" if dir_text == "正面" else "white"
-                st.markdown(f"<div style='text-align: center; background-color: {bg_color}; padding: 30px; border-radius: 10px;'>"
-                            f"<h1 style='color: {text_color}; font-size: 60px; margin: 0;'>{dir_text}</h1>"
-                            f"<h2 style='color: {text_color}; margin-top: 10px;'>座って足踏みキープ</h2>"
+                st.markdown(f"<div style='text-align: center; background-color: #2b82d6; padding: 30px; border-radius: 10px;'>"
+                            f"<h2 style='color: white; margin: 0;'>座って足踏みしながら 勝つ手を出して！</h2>"
+                            f"<h1 style='color: white; font-size: 85px; margin: 15px 0;'>{current_hand['emoji']} {current_hand['name']}</h1>"
+                            f"<h3 style='color: white; margin: 0;'>リズムに合わせて足踏みキープ！</h3>"
                             f"</div>", unsafe_allow_html=True)
-                time.sleep(1.3)
+                time.sleep(2.0)
                 
     # --- 難易度D：ストップ＆ゴー ---
     elif st.session_state.difficulty == "D":
@@ -166,33 +184,24 @@ elif st.session_state.step == "training_running":
                                 f"</div>", unsafe_allow_html=True)
                 time.sleep(1.0)
 
-    # --- 難易度B：リバース・ワード ---
-   # --- 【改良版】難易度B：リバース＆ストレート・ワード ---
+    # --- 難易度B：リバース＆ストレート・ワード ---
     elif st.session_state.difficulty == "B":
         import random
-        
-        # 単語のリスト
         words = ["さくら", "たぬき", "めだか", "すいか", "おてだま", "きつね", "ひこうき"]
-        # 指示の選択肢（そのまま読む か 逆から読む か）
         mode_options = ["ストレート", "リバース"]
-        
-        # 5問ランダムに出題
         chosen_words = random.sample(words, 5) if len(words) >= 5 else words
         
         for word in chosen_words:
-            # 「そのまま」か「逆から」かをランダムに決定
             current_mode = random.choice(mode_options)
-            
             if current_mode == "ストレート":
                 title_text = "✨ そのまま声に出して！ ✨"
-                bg_color = "#2bd677" # 安心の緑色
+                bg_color = "#2bd677"
                 display_word = f"👉 {word} 👈"
             else:
                 title_text = "🔥 逆から声に出して！ 🔥"
-                bg_color = "#ffaa00" # 注意のオレンジ色
+                bg_color = "#ffaa00"
                 display_word = f"👉 {word} 👈"
                 
-            # 高齢者が文字を確認して切り替える時間を考慮し、1問につき3.5秒キープ
             for countdown in range(3, 0, -1):
                 with placeholder.container():
                     st.markdown(f"<div style='text-align: center; background-color: {bg_color}; padding: 30px; border-radius: 10px;'>"
@@ -200,37 +209,46 @@ elif st.session_state.step == "training_running":
                                 f"<h1 style='color: white; font-size: 70px; margin: 10px 0;'>{display_word}</h1>"
                                 f"<h3 style='color: white; margin: 0;'>次の問題まで あと {countdown} 秒</h3>"
                                 f"</div>", unsafe_allow_html=True)
-                time.sleep(1.1) # カウントダウンのテンポをほんの少し調整
-                
-        with placeholder.container():
-            st.markdown("<div style='text-align: center; background-color: #f0f2f6; padding: 30px; border-radius: 10px;'><h1>終了！</h1></div>", unsafe_allow_html=True)
-            time.sleep(1.0)
+                time.sleep(1.1)
 
     # --- 難易度A：お手玉・トランスファー ---
-    # --- 【改良版】難易度A：お手玉・トランスファー ---
     elif st.session_state.difficulty == "A":
         import random
-        
-        # 指示の選択肢（左右の手）
         hands_options = ["みぎ手", "ひだり手"]
-        
-        # 15回ランダムに指示を出す
         for i in range(15):
-            # 左右どちらかの手をランダムに決定
             current_hand = random.choice(hands_options)
-            
             with placeholder.container():
                 st.markdown(f"<div style='text-align: center; background-color: #a04bff; padding: 30px; border-radius: 10px;'>"
                             f"<h2 style='color: white; margin: 0;'>画面の手にお手玉を移動！</h2>"
                             f"<h1 style='color: white; font-size: 75px; margin: 15px 0;'>🫴 {current_hand} 🫳</h1>"
                             f"<h3 style='color: white; margin: 0;'>同じ手が続くこともあるよ！足踏みキープ！</h3>"
                             f"</div>", unsafe_allow_html=True)
-                time.sleep(1.2) # 考える時間を考慮して1.2秒に微調整
+                time.sleep(1.2)
+
+    # --- 難易度S：片脚立ち・後出し負けじゃんけん ---
+    elif st.session_state.difficulty == "S":
+        import random
+        janken_options = [
+            {"name": "グー", "emoji": "✊"},
+            {"name": "チョキ", "emoji": "✌️"},
+            {"name": "パー", "emoji": "✋"}
+        ]
+        # 判断に少し時間がかかるため、合計8回出題
+        for i in range(8):
+            current_hand = random.choice(janken_options)
+            # カウントダウン式で表示
+            for countdown in range(3, 0, -1):
+                with placeholder.container():
+                    st.markdown(f"<div style='text-align: center; background-color: #d62b2b; padding: 30px; border-radius: 10px;'>"
+                                f"<h2 style='color: white; margin: 0;'>⚠️ わざと【負ける手】を出して！ ⚠️</h2>"
+                                f"<h1 style='color: white; font-size: 85px; margin: 15px 0;'>{current_hand['emoji']} {current_hand['name']}</h1>"
+                                f"<h3 style='color: white; margin: 0;'>片脚立ちをキープ！ あと {countdown} 秒</h3>"
+                                f"</div>", unsafe_allow_html=True)
+                time.sleep(1.0)
                 
-        # 最後に終了表示
-        with placeholder.container():
-            st.markdown("<div style='text-align: center; background-color: #f0f2f6; padding: 30px; border-radius: 10px;'><h1>終了！</h1></div>", unsafe_allow_html=True)
-            time.sleep(1.0)
+    with placeholder.container():
+        st.markdown("<div style='text-align: center; background-color: #f0f2f6; padding: 30px; border-radius: 10px;'><h1>終了！</h1></div>", unsafe_allow_html=True)
+        time.sleep(1.0)
                 
     st.session_state.step = "result_input"
     st.rerun()
