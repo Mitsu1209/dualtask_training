@@ -29,12 +29,12 @@ if st.session_state.step == "menu":
         st.session_state.step = "safety_check"
         st.rerun()
         
-    if st.button("🟡 難易度 D（やや易：立ったまま ＋ 音への反応）", use_container_width=True):
+    if st.button("🟡 難易度 D（やや易：立ったまま ＋ 赤マークで反応）", use_container_width=True):
         st.session_state.difficulty = "D"
         st.session_state.step = "safety_check"
         st.rerun()
         
-    if st.button("🟠 難易度 C（ふつう：立ったまま足踏み ＋ 計算）", use_container_width=True):
+    if st.button("🟠 難易度 C（ふつう：立ったまま足踏み ＋ 3の倍数で拍手）", use_container_width=True):
         st.session_state.difficulty = "C"
         st.session_state.step = "safety_check"
         st.rerun()
