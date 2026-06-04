@@ -1,8 +1,8 @@
 import streamlit as st
 import time
 
-# ページの設定
-st.set_page_config(page_title="転倒予防「ながら」エクササイズ", page_icon="🏃‍♂️", layout="centered")
+# ページの設定：layoutを"wide"にして横幅を最大化します
+st.set_page_config(page_title="転倒予防「ながら」エクササイズ", page_icon="🏃‍♂️", layout="wide")
 
 # --- セッション状態（アプリの記憶）の初期化 ---
 if "step" not in st.session_state:
@@ -133,7 +133,7 @@ elif st.session_state.step == "training_ready":
         st.rerun()
 
 # ==========================================
-# ステップ4：トレーニング実行画面（全ロジック）
+# ステップ4：トレーニング実行画面（全画面・超巨大化仕様）
 # ==========================================
 elif st.session_state.step == "training_running":
     placeholder = st.empty()
@@ -149,22 +149,22 @@ elif st.session_state.step == "training_running":
         for i in range(10):
             current_hand = random.choice(janken_options)
             with placeholder.container():
-                st.markdown(f"<div style='text-align: center; background-color: #2b82d6; padding: 30px; border-radius: 10px;'>"
-                            f"<h2 style='color: white; margin: 0;'>座って足踏みしながら 勝つ手を出して！</h2>"
-                            f"<h1 style='color: white; font-size: 85px; margin: 15px 0;'>{current_hand['emoji']} {current_hand['name']}</h1>"
-                            f"<h3 style='color: white; margin: 0;'>リズムに合わせて足踏みキープ！</h3>"
+                st.markdown(f"<div style='text-align: center; background-color: #2b82d6; padding: 80px 20px; border-radius: 15px; width: 100%;'>"
+                            f"<h1 style='color: white; font-size: 50px; margin: 0 0 30px 0;'>座って足踏みしながら【勝つ手】を出して！</h1>"
+                            f"<div style='font-size: 160px; line-height: 1.2;'>{current_hand['emoji']}</div>"
+                            f"<h1 style='color: white; font-size: 90px; margin: 20px 0 0 0;'>{current_hand['name']}</h1>"
                             f"</div>", unsafe_allow_html=True)
                 time.sleep(2.0)
                 
     # --- 難易度D：ストップ＆ゴー ---
     elif st.session_state.difficulty == "D":
-        commands = ["🟢 キープ", "🟢 キープ", "👏手を叩く！", "🟢 キープ", "🟢 キープ", "👏手を叩く！", "🟢 キープ", "👏手を叩く！", "🟢 キープ", "🟢 キープ", "👏手を叩く！", "終了！"]
+        commands = ["🟢 キープ", "🟢 キープ", "👏手を叩く！", "🟢 キープ", "🟢 キープ", "👏手を叩く！", "🟢 キープ", "👏手を叩く！", "🟢 キープ", "🟢 キープ", "👏手を叩く！"]
         for cmd_text in commands:
             with placeholder.container():
                 bg_color = "#ff4b4b" if "手を叩く" in cmd_text else "#2bd677"
-                st.markdown(f"<div style='text-align: center; background-color: {bg_color}; padding: 30px; border-radius: 10px;'>"
-                            f"<h1 style='color: white; font-size: 60px; margin: 0;'>{cmd_text}</h1>"
-                            f"<h2 style='color: white; margin-top: 10px;'>まっすぐ立つ姿勢</h2>"
+                st.markdown(f"<div style='text-align: center; background-color: {bg_color}; padding: 130px 20px; border-radius: 15px; width: 100%;'>"
+                            f"<div style='font-size: 130px; color: white; font-weight: bold; line-height: 1.2;'>{cmd_text}</div>"
+                            f"<h1 style='color: white; font-size: 50px; margin: 40px 0 0 0;'>まっすぐ立つ姿勢</h1>"
                             f"</div>", unsafe_allow_html=True)
                 time.sleep(1.3)
 
@@ -173,14 +173,14 @@ elif st.session_state.step == "training_running":
         for i in range(1, 16):
             with placeholder.container():
                 if i % 3 == 0:
-                    st.markdown(f"<div style='text-align: center; background-color: #ff4b4b; padding: 30px; border-radius: 10px;'>"
-                                f"<h1 style='color: white; font-size: 80px; margin: 0;'>👏 {i} 👏</h1>"
-                                f"<h2 style='color: white; margin-top: 10px;'>手を叩く！</h2>"
+                    st.markdown(f"<div style='text-align: center; background-color: #ff4b4b; padding: 100px 20px; border-radius: 15px; width: 100%;'>"
+                                f"<div style='font-size: 160px; color: white; line-height: 1.2;'>👏 {i} 👏</div>"
+                                f"<h1 style='color: white; font-size: 60px; margin: 30px 0 0 0;'>手を叩く！</h1>"
                                 f"</div>", unsafe_allow_html=True)
                 else:
-                    st.markdown(f"<div style='text-align: center; background-color: #f0f2f6; padding: 30px; border-radius: 10px;'>"
-                                f"<h1 style='color: #31333F; font-size: 80px; margin: 0;'>{i}</h1>"
-                                f"<h2 style='color: #31333F; margin-top: 10px;'>足踏みキープ</h2>"
+                    st.markdown(f"<div style='text-align: center; background-color: #f0f2f6; padding: 100px 20px; border-radius: 15px; width: 100%;'>"
+                                f"<div style='font-size: 160px; color: #31333F; line-height: 1.2;'>{i}</div>"
+                                f"<h1 style='color: #31333F; font-size: 60px; margin: 30px 0 0 0;'>足踏みキープ</h1>"
                                 f"</div>", unsafe_allow_html=True)
                 time.sleep(1.0)
 
@@ -196,18 +196,16 @@ elif st.session_state.step == "training_running":
             if current_mode == "ストレート":
                 title_text = "✨ そのまま声に出して！ ✨"
                 bg_color = "#2bd677"
-                display_word = f"👉 {word} 👈"
             else:
                 title_text = "🔥 逆から声に出して！ 🔥"
                 bg_color = "#ffaa00"
-                display_word = f"👉 {word} 👈"
                 
             for countdown in range(3, 0, -1):
                 with placeholder.container():
-                    st.markdown(f"<div style='text-align: center; background-color: {bg_color}; padding: 30px; border-radius: 10px;'>"
-                                f"<h2 style='color: white; margin: 0;'>{title_text}</h2>"
-                                f"<h1 style='color: white; font-size: 70px; margin: 10px 0;'>{display_word}</h1>"
-                                f"<h3 style='color: white; margin: 0;'>次の問題まで あと {countdown} 秒</h3>"
+                    st.markdown(f"<div style='text-align: center; background-color: {bg_color}; padding: 80px 20px; border-radius: 15px; width: 100%;'>"
+                                f"<h1 style='color: white; font-size: 50px; margin: 0 0 20px 0;'>{title_text}</h1>"
+                                f"<div style='font-size: 120px; color: white; font-weight: bold; line-height: 1.2;'>{word}</div>"
+                                f"<h1 style='color: white; font-size: 45px; margin: 30px 0 0 0;'>次の問題まで あと {countdown} 秒</h1>"
                                 f"</div>", unsafe_allow_html=True)
                 time.sleep(1.1)
 
@@ -218,10 +216,10 @@ elif st.session_state.step == "training_running":
         for i in range(15):
             current_hand = random.choice(hands_options)
             with placeholder.container():
-                st.markdown(f"<div style='text-align: center; background-color: #a04bff; padding: 30px; border-radius: 10px;'>"
-                            f"<h2 style='color: white; margin: 0;'>画面の手にお手玉を移動！</h2>"
-                            f"<h1 style='color: white; font-size: 75px; margin: 15px 0;'>🫴 {current_hand} 🫳</h1>"
-                            f"<h3 style='color: white; margin: 0;'>同じ手が続くこともあるよ！足踏みキープ！</h3>"
+                st.markdown(f"<div style='text-align: center; background-color: #a04bff; padding: 100px 20px; border-radius: 15px; width: 100%;'>"
+                            f"<h1 style='color: white; font-size: 50px; margin: 0 0 30px 0;'>画面の手にお手玉を移動！</h1>"
+                            f"<div style='font-size: 140px; color: white; font-weight: bold; line-height: 1.2;'>🫴 {current_hand} 🫳</div>"
+                            f"<h1 style='color: white; font-size: 45px; margin: 30px 0 0 0;'>同じ手が続くこともあるよ！足踏み！</h1>"
                             f"</div>", unsafe_allow_html=True)
                 time.sleep(1.2)
 
@@ -233,22 +231,22 @@ elif st.session_state.step == "training_running":
             {"name": "チョキ", "emoji": "✌️"},
             {"name": "パー", "emoji": "✋"}
         ]
-        # 判断に少し時間がかかるため、合計8回出題
         for i in range(8):
             current_hand = random.choice(janken_options)
-            # カウントダウン式で表示
             for countdown in range(3, 0, -1):
                 with placeholder.container():
-                    st.markdown(f"<div style='text-align: center; background-color: #d62b2b; padding: 30px; border-radius: 10px;'>"
-                                f"<h2 style='color: white; margin: 0;'>⚠️ わざと【負ける手】を出して！ ⚠️</h2>"
-                                f"<h1 style='color: white; font-size: 85px; margin: 15px 0;'>{current_hand['emoji']} {current_hand['name']}</h1>"
-                                f"<h3 style='color: white; margin: 0;'>片脚立ちをキープ！ あと {countdown} 秒</h3>"
+                    st.markdown(f"<div style='text-align: center; background-color: #d62b2b; padding: 80px 20px; border-radius: 15px; width: 100%;'>"
+                                f"<h1 style='color: white; font-size: 50px; margin: 0 0 30px 0;'>⚠️ わざと【負ける手】を出して！ ⚠️</h1>"
+                                f"<div style='font-size: 150px; line-height: 1.2;'>{current_hand['emoji']}</div>"
+                                f"<h1 style='color: white; font-size: 70px; margin: 10px 0 20px 0;'>{current_hand['name']}</h1>"
+                                f"<h1 style='color: white; font-size: 45px; margin: 0;'>片脚立ちをキープ！ あと {countdown} 秒</h1>"
                                 f"</div>", unsafe_allow_html=True)
                 time.sleep(1.0)
                 
+    # 全モード共通の終了画面も巨大化
     with placeholder.container():
-        st.markdown("<div style='text-align: center; background-color: #f0f2f6; padding: 30px; border-radius: 10px;'><h1>終了！</h1></div>", unsafe_allow_html=True)
-        time.sleep(1.0)
+        st.markdown("<div style='text-align: center; background-color: #f0f2f6; padding: 15px 20px; border-radius: 15px; width: 100%;'><div style='font-size: 150px; font-weight: bold; color: #31333F;'>終了！</div></div>", unsafe_allow_html=True)
+        time.sleep(1.2)
                 
     st.session_state.step = "result_input"
     st.rerun()
