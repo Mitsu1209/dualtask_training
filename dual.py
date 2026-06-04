@@ -29,7 +29,7 @@ if st.session_state.step == "menu":
         st.session_state.step = "safety_check"
         st.rerun()
         
-    if st.button("🟡 難易度 D（やや易：立ったまま ＋ 赤マークで反応）", use_container_width=True):
+    if st.button("🟡 難易度 D（やや易：立ったまま ＋ 赤マークで拍手）", use_container_width=True):
         st.session_state.difficulty = "D"
         st.session_state.step = "safety_check"
         st.rerun()
@@ -39,12 +39,12 @@ if st.session_state.step == "menu":
         st.session_state.step = "safety_check"
         st.rerun()
 
-    if st.button("🔴 難易度 B（やや難：片脚立ち（支持あり） ＋ 言葉の逆唱）", use_container_width=True):
+    if st.button("🔴 難易度 B（やや難：立ったまま足踏み ＋ 3の倍数で拍手【難しい】）", use_container_width=True):
         st.session_state.difficulty = "B"
         st.session_state.step = "safety_check"
         st.rerun()
 
-    if st.button("🟣 難易度 A（難しい：足踏み ＋ 手元で物品操作）", use_container_width=True):
+    if st.button("🟣 難易度 A（難しい：片脚立ち（支持あり） ＋ 言葉の逆唱）", use_container_width=True):
         st.session_state.difficulty = "A"
         st.session_state.step = "safety_check"
         st.rerun()
@@ -62,7 +62,7 @@ elif st.session_state.step == "safety_check":
     
     if st.session_state.difficulty == "E":
         st.write("今回は【座った姿勢】で行います。背もたれのある安定した椅子に深く腰掛け、周りにぶつかる物がないか確認してください。")
-    elif st.session_state.difficulty in ["B", "S"]:
+    elif st.session_state.difficulty in ["A", "S"]:
         st.write("今回は【片脚立ち（支持あり）】を行います。必ず【椅子の背もたれや頑丈な手すり】の横に立ち、いつでも掴まれる準備をしてください。")
     else:
         st.write("今回は【立った姿勢】で行います。周りに掴まれる『椅子』や『手すり』はありますか？足元に物が散らばっていませんか？")
@@ -103,21 +103,23 @@ elif st.session_state.step == "training_ready":
         st.subheader("メニュー：ナンバー・クラップ")
         st.markdown("""
         1. 椅子の後ろに立ち、いつでも掴まれるようにして**足踏み**を始めてください。
-        2. 画面の数字が **3の倍数（3, 6, 9...）** になった瞬間だけ、足踏みを続けながら**手を1回叩いて**ください！
+        2. 画面に**1から15までの数字が順番に**表示されます。
+        3. 数字が **3の倍数（3, 6, 9, 12, 15）** になった瞬間だけ、足踏みを続けながら**手を1回叩いて**ください！
         """)
     elif st.session_state.difficulty == "B":
+        st.subheader("メニュー：ナンバー・クラップ【難しい】")
+        st.markdown("""
+        1. 椅子の後ろに立ち、いつでも掴まれるようにして**足踏み**を始めてください。
+        2. 画面に **1から20までの数字が「ランダム（バラバラ）」に** 表示されます！
+        3. 画面にパッと出た数字が **3の倍数（3, 6, 9, 12, 15, 18）** だったら、素早く**手を1回叩いて**ください！
+        4. 背景色もバラバラに変わるので、色に騙されず数字をよく計算しましょう！
+        """)
+    elif st.session_state.difficulty == "A":
         st.subheader("メニュー：リバース＆ストレート・ワード")
         st.markdown("""
         1. **片手で椅子をしっかり掴み**、どちらかの足を上げて**片脚立ち**になります。
         2. 画面の指示（そのまま読む、または逆から読む）に合わせて、表示された単語を声に出します。
         3. ルールが途中で変わるので、騙されないように声を出し、バランスをキープしてください！
-        """)
-    elif st.session_state.difficulty == "A":
-        st.subheader("メニュー：お手玉・トランスファー")
-        st.markdown("""
-        1. **お手玉、または丸めた靴下など**（落としても安全なもの）を1つ手元に用意します。
-        2. その場でリズムよく**足踏み**を始めます。
-        3. 画面にランダムで表示される指示（みぎ手・ひだり手）に合わせて、お手玉をその手に移動させてください！連続で同じ手になることもあります。
         """)
     elif st.session_state.difficulty == "S":
         st.subheader("メニュー：片脚立ち・後出し負けじゃんけん")
@@ -138,9 +140,17 @@ elif st.session_state.step == "training_ready":
 elif st.session_state.step == "training_running":
     placeholder = st.empty()
     
+    # 共通で使用するランダム背景色リスト
+    import random
+    colors = [
+        {"bg": "#ff4b4b", "text": "white"},   # 赤
+        {"bg": "#f0f2f6", "text": "#31333F"}, # 白
+        {"bg": "#2b82d6", "text": "white"},   # 青
+        {"bg": "#2bd677", "text": "white"}    # 緑
+    ]
+    
     # --- 難易度E：座位足踏み・ランダムじゃんけん ---
     if st.session_state.difficulty == "E":
-        import random
         janken_options = [
             {"name": "グー", "emoji": "✊"},
             {"name": "チョキ", "emoji": "✌️"},
@@ -168,41 +178,48 @@ elif st.session_state.step == "training_running":
                             f"</div>", unsafe_allow_html=True)
                 time.sleep(1.3)
 
-    # --- 【改良版】難易度C：ナンバー・クラップ ---
+    # --- 難易度C：ナンバー・クラップ（順番通りに15まで・背景色ランダム） ---
     elif st.session_state.difficulty == "C":
-        import random
-        
-        # ランダムに使用する背景色のリスト
-        # 高齢者の方が見やすいよう、文字（白または黒）とのコントラストが良い色を選んでいます
-        colors = [
-            {"bg": "#ff4b4b", "text": "white"},   # 赤
-            {"bg": "#f0f2f6", "text": "#31333F"}, # 白（薄いグレー）
-            {"bg": "#2b82d6", "text": "white"},   # 青
-            {"bg": "#2bd677", "text": "white"}    # 緑
-        ]
-        
         for i in range(1, 16):
-            # 3の倍数かどうかに関係なく、色をリストからランダムに1つ決定
             current_color = random.choice(colors)
-            
             with placeholder.container():
                 if i % 3 == 0:
-                    # 3の倍数のとき（画面の色はランダムだが、文字の指示は「手を叩く」）
                     st.markdown(f"<div style='text-align: center; background-color: {current_color['bg']}; padding: 100px 20px; border-radius: 15px; width: 100%;'>"
                                 f"<div style='font-size: 160px; color: {current_color['text']}; line-height: 1.2;'>👏 {i} 👏</div>"
                                 f"<h1 style='color: {current_color['text']}; font-size: 60px; margin: 30px 0 0 0;'>手を叩く！</h1>"
                                 f"</div>", unsafe_allow_html=True)
                 else:
-                    # 3の倍数ではないとき
                     st.markdown(f"<div style='text-align: center; background-color: {current_color['bg']}; padding: 100px 20px; border-radius: 15px; width: 100%;'>"
                                 f"<div style='font-size: 160px; color: {current_color['text']}; line-height: 1.2;'>{i}</div>"
                                 f"<h1 style='color: {current_color['text']}; font-size: 60px; margin: 30px 0 0 0;'>足踏みキープ</h1>"
                                 f"</div>", unsafe_allow_html=True)
                 time.sleep(1.0)
 
-    # --- 難易度B：リバース＆ストレート・ワード ---
+    # --- 【新登場】難易度B：ナンバー・クラップ【難しい】（1-20のランダム数字・背景色ランダム） ---
     elif st.session_state.difficulty == "B":
-        import random
+        # 1から20までの数字をランダムに並び替えたリストを作成（重複なしで15問出題）
+        random_numbers = random.sample(range(1, 21), 15)
+        
+        for num in random_numbers:
+            current_color = random.choice(colors)
+            with placeholder.container():
+                if num % 3 == 0:
+                    # 3の倍数のとき（3, 6, 9, 12, 15, 18）
+                    st.markdown(f"<div style='text-align: center; background-color: {current_color['bg']}; padding: 100px 20px; border-radius: 15px; width: 100%;'>"
+                                f"<div style='font-size: 160px; color: {current_color['text']}; line-height: 1.2;'>👏 {num} 👏</div>"
+                                f"<h1 style='color: {current_color['text']}; font-size: 60px; margin: 30px 0 0 0;'>手を叩く！</h1>"
+                                f"</div>", unsafe_allow_html=True)
+                else:
+                    # 3の倍数ではないとき
+                    st.markdown(f"<div style='text-align: center; background-color: {current_color['bg']}; padding: 100px 20px; border-radius: 15px; width: 100%;'>"
+                                f"<div style='font-size: 160px; color: {current_color['text']}; line-height: 1.2;'>{num}</div>"
+                                f"<h1 style='color: {current_color['text']}; font-size: 60px; margin: 30px 0 0 0;'>足踏みキープ</h1>"
+                                f"</div>", unsafe_allow_html=True)
+                # ランダム数字なので、計算の思考時間を少し考慮して1.2秒に設定
+                time.sleep(1.2)
+
+    # --- 難易度A（旧B）：リバース＆ストレート・ワード ---
+    elif st.session_state.difficulty == "A":
         words = ["さくら", "たぬき", "めだか", "すいか", "おてだま", "きつね", "ひこうき"]
         mode_options = ["ストレート", "リバース"]
         chosen_words = random.sample(words, 5) if len(words) >= 5 else words
@@ -225,23 +242,8 @@ elif st.session_state.step == "training_running":
                                 f"</div>", unsafe_allow_html=True)
                 time.sleep(1.1)
 
-    # --- 難易度A：お手玉・トランスファー ---
-    elif st.session_state.difficulty == "A":
-        import random
-        hands_options = ["みぎ手", "ひだり手"]
-        for i in range(15):
-            current_hand = random.choice(hands_options)
-            with placeholder.container():
-                st.markdown(f"<div style='text-align: center; background-color: #a04bff; padding: 100px 20px; border-radius: 15px; width: 100%;'>"
-                            f"<h1 style='color: white; font-size: 50px; margin: 0 0 30px 0;'>画面の手にお手玉を移動！</h1>"
-                            f"<div style='font-size: 140px; color: white; font-weight: bold; line-height: 1.2;'>🫴 {current_hand} 🫳</div>"
-                            f"<h1 style='color: white; font-size: 45px; margin: 30px 0 0 0;'>同じ手が続くこともあるよ！足踏み！</h1>"
-                            f"</div>", unsafe_allow_html=True)
-                time.sleep(1.2)
-
     # --- 難易度S：片脚立ち・後出し負けじゃんけん ---
     elif st.session_state.difficulty == "S":
-        import random
         janken_options = [
             {"name": "グー", "emoji": "✊"},
             {"name": "チョキ", "emoji": "✌️"},
@@ -259,7 +261,7 @@ elif st.session_state.step == "training_running":
                                 f"</div>", unsafe_allow_html=True)
                 time.sleep(1.0)
                 
-    # 全モード共通の終了画面も巨大化
+    # 全モード共通の終了画面
     with placeholder.container():
         st.markdown("<div style='text-align: center; background-color: #f0f2f6; padding: 15px 20px; border-radius: 15px; width: 100%;'><div style='font-size: 150px; font-weight: bold; color: #31333F;'>終了！</div></div>", unsafe_allow_html=True)
         time.sleep(1.2)
